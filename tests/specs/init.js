@@ -2,6 +2,10 @@ var simple = require('simple-mock')
 var test = require('tape')
 var init = require('../../lib/init')
 
+// the number of calls registered with the account stub in
+// '../../lib/init'
+var NUM_ACCT_CALLS = 3;
+
 test('is "reset" triggered on "signin"', function (t) {
   t.plan(6)
 
@@ -32,7 +36,7 @@ test('is "reset" triggered on "signin"', function (t) {
   }
 
   init(hoodie)
-  t.is(hoodie.account.on.callCount, 2, 'calls hoodie account.on once')
+  t.is(hoodie.account.on.callCount, NUM_ACCT_CALLS, 'calls hoodie account.on once')
 
   var signInHandler = hoodie.account.on.calls[1].args[1]
   signInHandler()
@@ -58,8 +62,45 @@ test('is "reset" triggered on "signout"', function (t) {
   }
 
   init(hoodie)
-  t.is(hoodie.account.on.callCount, 2, 'calls hoodie account.on once')
+  t.is(hoodie.account.on.callCount, NUM_ACCT_CALLS, 'calls hoodie account.on once')
 
   var signOutHandler = hoodie.account.on.calls[0].args[1]
   signOutHandler()
 })
+
+test('"hoodie.store.connect()" is called when "hoodie.account.isSignedIn()" returns "true" ', function (t) {
+  t.plan(1)
+
+  var hoodie = {
+    account: {
+      id: 0,
+      on: simple.stub(),
+      isSignedIn: simple.stub()
+        .returnWith(true)
+    },
+    store: {
+      connect: function () {
+
+      },
+      reset: function (options) {
+
+        return {
+          then: function (callback) {
+            callback()
+          }
+        }
+      }
+    }
+  }
+
+  init(hoodie)
+  t.is(hoodie.account.on.callCount, NUM_ACCT_CALLS, 'calls hoodie account.on once')
+
+
+});
+
+test('"hoodie.store.connect()" is *not* called when "hoodie.account.isSignedIn()" returns "false"', function (t) {
+  t.plan(1)
+  
+  t.notOk(true, "unimplemented")
+});
