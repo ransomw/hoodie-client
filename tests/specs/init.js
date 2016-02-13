@@ -63,3 +63,13 @@ test('is "reset" triggered on "signout"', function (t) {
   var signOutHandler = hoodie.account.on.calls[0].args[1]
   signOutHandler()
 })
+
+test('"hoodie.store.connect()" is called when "hoodie.account.isSignedIn()" returns "true" ', function (t) {
+  t.plan(1)
+  t.notOk(true, 'unimplemented')
+})
+
+test('"hoodie.store.connect()" is *not* called when "hoodie.account.isSignedIn()" returns "false"', function (t) {
+  t.plan(1)
+  t.notOk(true, 'unimplemented')
+})
