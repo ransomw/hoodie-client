@@ -66,10 +66,40 @@ test('is "reset" triggered on "signout"', function (t) {
 
 test('"hoodie.store.connect()" is called when "hoodie.account.isSignedIn()" returns "true" ', function (t) {
   t.plan(1)
-  t.notOk(true, 'unimplemented')
+
+  var hoodie = {
+    account: {
+      id: 0,
+      on: simple.stub(),
+      isSignedIn: simple.stub().returnWith(true)
+    },
+    store: {
+      connect: simple.stub(),
+      reset: simple.stub()
+    }
+  }
+
+  init(hoodie)
+  t.is(hoodie.store.connect.callCount, 1,
+       'calls hoodie account.connect once')
 })
 
 test('"hoodie.store.connect()" is *not* called when "hoodie.account.isSignedIn()" returns "false"', function (t) {
   t.plan(1)
-  t.notOk(true, 'unimplemented')
+
+  var hoodie = {
+    account: {
+      id: 0,
+      on: simple.stub(),
+      isSignedIn: simple.stub().returnWith(false)
+    },
+    store: {
+      connect: simple.stub(),
+      reset: simple.stub()
+    }
+  }
+
+  init(hoodie)
+  t.is(hoodie.store.connect.callCount, 0,
+       'does not hoodie account.connect')
 })
